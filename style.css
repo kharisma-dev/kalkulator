@@ -1,0 +1,91 @@
+@import
+url('[https:fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap]');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f0f0;
+    display:flex;
+    justify-content: center;
+    height: 100vh;
+}
+
+.calculator-container {
+    background-color: #333;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.display{
+    background-color: #222;
+    color: #fff;
+    font-size: 2.5rem;
+    padding: 20px;
+    text-align: right;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    overflow-wrap: break-word;
+    min-height: 40px;
+}
+
+#current-operand {
+    display: block;
+}
+
+.buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.buttons-grid {
+    button {
+    font-size: 1,5rem;
+    padding: 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #555;
+    color: #fff;
+    transition: background-color 0.2s;}
+    
+    .operator {
+    background-color: #f39c12;
+    }
+    
+    .operator:hover {
+    background-color: #f1c40f;
+    }
+    
+    .all-clear {
+    background-color: #e74c3c;
+    }
+
+    .all-clear:hover {
+    background-color: #c0392b;
+    }
+}
+
+.buttons-grid button:hover {
+    background-color: #777;
+}
+
+.span-two {
+    grid-column: span 2;
+}
+
+/* .operator {
+    background-color: #f39c12;
+}
+
+.operator:hover {
+    background-color: #f1c40f;
+}
+
+.all-clear {
+    background-color: #e74c3c;
+}
+
+.all-clear:hover {
+    background-color: #c0392b;
+} */
