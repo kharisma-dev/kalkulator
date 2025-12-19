@@ -8,9 +8,7 @@ const currentOperandTextElement = document.getElementById('current-operand');
 
 // numberButtons.forEach(button=> {
 //     button.addEventListener('click',()=> {
-
 //         const number = button.innerText;
-
 //         if (displayElement.innerText ==='0') {
 //             displayElement.innerText=number;
 //         } else {
@@ -27,6 +25,14 @@ let currentOperand = '0';
 let previousOperand = '';
 let operation = undefined;
 
+// Fungsi untuk format angka Indonesia (titik untuk ribuan, koma untuk desimal)
+function formatAngkaIndonesia(angka) {
+    const parts = angka.toString().split('.');
+    const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const decimalPart = parts[1] ? ',' + parts[1] : '';
+    return integerPart + decimalPart;
+}
+
 function clear() {
     currentOperand ='0';
     previousOperand= '';
@@ -35,10 +41,9 @@ function clear() {
 }
 
 function updateDisplay() {
-    // currentOperandTextElement.innerText = currentOperand;
-    currentOperandTextElement.innerText = formatDisplayNumber(currentOperand);
+    currentOperandTextElement.innerText = formatAngkaIndonesia(currentOperand);
     if (operation != null) {
-        previousOperandTextElement.innerText = `${formatDisplayNumber(previousOperand)} ${operation}`;
+        previousOperandTextElement.innerText = `${formatAngkaIndonesia(previousOperand)} ${operation}`;
     } else {
         previousOperandTextElement.innerText='';
     }
@@ -60,26 +65,6 @@ function deleteNumber() {
         currentOperand='0';
     }
     updateDisplay ();
-}
-
-function formatDisplayNumber(numberString) {
-    if (numberString === 'Error') return 'Error';
-    const stringNumber = numberString.toString();
-    const [integerDigits, decimalDigits] = stringNumber.split('.');
-    const integer = parseFloat(integerDigits);
-    
-    let formattedInteger;
-    if (isNaN(integer)) {
-        formattedInteger = '0';
-    } else {
-
-        formattedInteger = integer.toLocaleString('en-US');
-    }
-    if (decimalDigits != null) {
-        return `${formattedInteger}.${decimalDigits}`;
-    } else {
-        return formattedInteger;
-    }
 }
 
 function chooseOperation(op) {
@@ -109,27 +94,21 @@ function compute(){
         case '%':computation = prev % current; break; //Modulo 
         default: return;
     }
-    
-    if (!isFinite(computation)) {
-        currentOperand ='Error';
-        operation = undefined;
-        previousOperand = '';
-        updateDisplay();
-        return;
-    }
 
-    currentOperand = computation.toString();
+    currentOperand = computation;
     operation = undefined;
     previousOperand = '';
     updateDisplay();
 }
 
+// Event listeners untuk tombol angka
 numberButtons.forEach(button => {
     button.addEventListener('click', () => {
         appendNumber(button.innerText);
     });
 });
 
+// Event listeners untuk tombol operator
 operationButtons.forEach(button => {
     button.addEventListener('click', () => {
         chooseOperation(button.innerText);
@@ -139,15 +118,3 @@ operationButtons.forEach(button => {
 allClearButton.addEventListener('click', clear);
 deleteButton.addEventListener('click', deleteNumber);
 equalsButton.addEventListener('click', compute);
-    
-numberButtons.forEach(button => {
-    button.addEventListener('click',()=> {
-        appendNumberButton(button.innerText);
-    });
-});
-  
-operationButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        chooseOperation(button.innerText);
-    });
-});
