@@ -41,9 +41,9 @@ function clear() {
 }
 
 function updateDisplay() {
-    currentOperandTextElement.innerText = currentOperand;
+    currentOperandTextElement.innerText = formatAngkaIndonesia(currentOperand);
     if (operation != null) {
-        previousOperandTextElement.innerText = '$ {previousOperand} ${operation}';
+        previousOperandTextElement.innerText = `${formatAngkaIndonesia(previousOperand)} ${operation}`;
     } else {
         previousOperandTextElement.innerText='';
     }
@@ -67,25 +67,7 @@ function deleteNumber() {
     updateDisplay ();
 }
 
-function formatDisplayNumber(numberString) {
-    if (numberString === 'Error') return 'Error';
-    const stringNumber = numberString.toString();
-    const [integerDigits, decimalDigits] = stringNumber.split('.');
-    const integer = parseFloat(integerDigits);
-    
-    let formattedInteger;
-    if (isNaN(integer)) {
-        formattedInteger = '0';
-    } else {
 
-        formattedInteger = integer.toLocaleString('en-US');
-    }
-    if (decimalDigits != null) {
-        return `${formattedInteger}.${decimalDigits}`;
-    } else {
-        return formattedInteger;
-    }
-}
 
 function chooseOperation(op) {
     if (currentOperand === '') return;
@@ -128,18 +110,6 @@ function compute(){
     previousOperand = '';
     updateDisplay();
 }
-
-numberButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        appendNumber(button.innerText);
-    });
-});
-
-operationButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        chooseOperation(button.innerText);
-    });
-});
 
 // Event listeners untuk tombol angka
 numberButtons.forEach(button => {
