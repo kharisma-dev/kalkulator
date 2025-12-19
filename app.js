@@ -4,7 +4,7 @@ const equalsButton = document.querySelector('[data-equals]');
 const deleteButton = document.querySelector('[data-delete]');
 const allClearButton = document.querySelector('[data-all-clear]');
 const previousOperandTextElement = document.getElementById('previous-operand');
-const displayElementTextElement = document.getElementById('current-operand');
+const currentOperandTextElement = document.getElementById('current-operand');
 
 // numberButtons.forEach(button=> {
 //     button.addEventListener('click',()=> {
@@ -35,9 +35,10 @@ function clear() {
 }
 
 function updateDisplay() {
-    currentOperandTextElement.innerText = currentOperand;
+    // currentOperandTextElement.innerText = currentOperand;
+    currentOperandTextElement.innerText = formatDisplayNumber(currentOperand);
     if (operation != null) {
-        previousOperandTextElement.innerText = '$ {previousOperand} ${operation}';
+        previousOperandTextElement.innerText = `${formatDisplayNumber(previousOperand)} ${operation}`;
     } else {
         previousOperandTextElement.innerText='';
     }
@@ -59,6 +60,26 @@ function deleteNumber() {
         currentOperand='0';
     }
     updateDisplay ();
+}
+
+function formatDisplayNumber(numberString) {
+    if (numberString === 'Error') return 'Error';
+    const stringNumber = numberString.toString();
+    const [integerDigits, decimalDigits] = stringNumber.split('.');
+    const integer = parseFloat(integerDigits);
+    
+    let formattedInteger;
+    if (isNaN(integer)) {
+        formattedInteger = '0';
+    } else {
+
+        formattedInteger = integer.toLocaleString('en-US');
+    }
+    if (decimalDigits != null) {
+        return `${formattedInteger}.${decimalDigits}`;
+    } else {
+        return formattedInteger;
+    }
 }
 
 function chooseOperation(op) {
@@ -88,12 +109,32 @@ function compute(){
         case '%':computation = prev % current; break; //Modulo 
         default: return;
     }
+    
+    if (!isFinite(computation)) {
+        currentOperand ='Error';
+        operation = undefined;
+        previousOperand = '';
+        updateDisplay();
+        return;
+    }
 
-    currentOperand = computation;
+    currentOperand = computation.toString();
     operation = undefined;
     previousOperand = '';
     updateDisplay();
 }
+
+numberButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        appendNumber(button.innerText);
+    });
+});
+
+operationButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        chooseOperation(button.innerText);
+    });
+});
 
 allClearButton.addEventListener('click', clear);
 deleteButton.addEventListener('click', deleteNumber);
