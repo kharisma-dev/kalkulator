@@ -41,9 +41,9 @@ function clear() {
 }
 
 function updateDisplay() {
-    currentOperandTextElement.innerText = formatAngkaIndonesia(currentOperand);
+    currentOperandTextElement.innerText = currentOperand;
     if (operation != null) {
-        previousOperandTextElement.innerText = `${formatAngkaIndonesia(previousOperand)} ${operation}`;
+        previousOperandTextElement.innerText = '$ {previousOperand} ${operation}';
     } else {
         previousOperandTextElement.innerText='';
     }
@@ -65,6 +65,26 @@ function deleteNumber() {
         currentOperand='0';
     }
     updateDisplay ();
+}
+
+function formatDisplayNumber(numberString) {
+    if (numberString === 'Error') return 'Error';
+    const stringNumber = numberString.toString();
+    const [integerDigits, decimalDigits] = stringNumber.split('.');
+    const integer = parseFloat(integerDigits);
+    
+    let formattedInteger;
+    if (isNaN(integer)) {
+        formattedInteger = '0';
+    } else {
+
+        formattedInteger = integer.toLocaleString('en-US');
+    }
+    if (decimalDigits != null) {
+        return `${formattedInteger}.${decimalDigits}`;
+    } else {
+        return formattedInteger;
+    }
 }
 
 function chooseOperation(op) {
@@ -94,12 +114,32 @@ function compute(){
         case '%':computation = prev % current; break; //Modulo 
         default: return;
     }
+    
+    if (!isFinite(computation)) {
+        currentOperand ='Error';
+        operation = undefined;
+        previousOperand = '';
+        updateDisplay();
+        return;
+    }
 
-    currentOperand = computation;
+    currentOperand = computation.toString();
     operation = undefined;
     previousOperand = '';
     updateDisplay();
 }
+
+numberButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        appendNumber(button.innerText);
+    });
+});
+
+operationButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        chooseOperation(button.innerText);
+    });
+});
 
 // Event listeners untuk tombol angka
 numberButtons.forEach(button => {
